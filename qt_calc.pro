@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    libs/operations.hpp \
     libs/polish_calc.hpp \
     libs/polish_calc_exceptions.hpp \
     mainwindow.hpp

@@ -16,9 +16,20 @@ public:
     ~MainWindow();
 
 private:
+    // Methods
+    void handleOperation(const std::string & operation);
+
+    // Members
     Ui::MainWindow *ui;
+
+
 private slots:
-    void onDigitPressed();
-    void on_pushButton_dot_clicked();
+    void onDigitClicked();
+    void onPushButtonDotClicked();
+    void onPushButtonPlusClicked();
+    void onPushButtonMinusClicked();
+    void onPushButtonMultiplyClicked();
+    void onPushButtonDivideClicked();
+    void onPushButtonCalculateClicked();
 };
 #endif // MAINWINDOW_HPP
