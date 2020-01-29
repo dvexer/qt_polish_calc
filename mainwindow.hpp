@@ -18,6 +18,8 @@ public:
 private:
     // Methods
     void handleOperation(const std::string & operation);
+    QString getLastDigit(const QString & str);
+
 
     // Members
     Ui::MainWindow *ui;
@@ -30,6 +32,8 @@ private slots:
     void onPushButtonMinusClicked();
     void onPushButtonMultiplyClicked();
     void onPushButtonDivideClicked();
+    void onPushButtonSpaceClicked();
+    void onPushButtonBackspaceClicked();
     void onPushButtonCalculateClicked();
 };
 #endif // MAINWINDOW_HPP

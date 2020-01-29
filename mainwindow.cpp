@@ -4,6 +4,8 @@
 #include "polish_calc.hpp"
 #include "operations.hpp"
 
+const char space = ' ';
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -26,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_mult, SIGNAL(clicked()), this, SLOT(onPushButtonMultiplyClicked()));
     connect(ui->pushButton_div, SIGNAL(clicked()), this, SLOT(onPushButtonDivideClicked()));
 
+    connect(ui->pushButton_dot, SIGNAL(clicked()), this, SLOT(onPushButtonDotClicked()));
+    connect(ui->pushButton_space, SIGNAL(clicked()), this, SLOT(onPushButtonSpaceClicked()));
     connect(ui->pushButton_backspace, SIGNAL(clicked()), this, SLOT(onPushButtonBackspaceClicked()));
 
     connect(ui->pushButton_calculate, SIGNAL(clicked()), this, SLOT(onPushButtonCalculateClicked()));
@@ -48,9 +52,12 @@ void MainWindow::onDigitClicked()
 
 void MainWindow::onPushButtonDotClicked()
 {
-    if (!ui->lineEditResult->text().contains('.')) {
-        ui->lineEditResult->setText(ui->lineEditResult->text() + '.');
-      }
+  QString number = getLastDigit(ui->lineEditResult->text());
+  if (number.isNull()) {
+    ui->lineEditResult->setText(ui->lineEditResult->text() + "0.");
+  } else if (!number.contains('.')) {
+    ui->lineEditResult->setText(ui->lineEditResult->text() + '.');
+  }
 }
 
 void MainWindow::onPushButtonPlusClicked()
@@ -73,9 +80,20 @@ void MainWindow::onPushButtonDivideClicked()
   handleOperation(polish_calc::divide);
 }
 
+void MainWindow::onPushButtonSpaceClicked()
+{
+  if (ui->lineEditResult->text().back() != space) {
+    ui->lineEditResult->setText(ui->lineEditResult->text() + space);
+  }
+}
+
 void MainWindow::onPushButtonBackspaceClicked()
 {
-  // todo
+  if (!ui->lineEditResult->text().isEmpty()) {
+    const int len = ui->lineEditResult->text().length();
+    QString newLine = ui->lineEditResult->text().mid(0, len-1);
+    ui->lineEditResult->setText(newLine);
+  }
 }
 
 void MainWindow::onPushButtonCalculateClicked()
@@ -93,10 +111,24 @@ void MainWindow::onPushButtonCalculateClicked()
 void MainWindow::handleOperation(const std::string &operation)
 {
   QString newLine;
-  if (ui->lineEditResult->text().back() == ' ') {
-      newLine = (ui->lineEditResult->text() + operation.c_str() + ' ');
+  if (ui->lineEditResult->text().isEmpty() || ui->lineEditResult->text().back() == space) {
+    newLine = (ui->lineEditResult->text() + operation.c_str() + space);
   } else {
-      newLine = (ui->lineEditResult->text() + ' ' + operation.c_str() + ' ');
+    newLine = (ui->lineEditResult->text() + space + operation.c_str() + space);
   }
   ui->lineEditResult->setText(newLine);
+}
+
+QString MainWindow::getLastDigit(const QString &str)
+{
+  QString result;
+  if (!str.isEmpty() && str.back() != space) {
+      const int index = str.lastIndexOf(space);
+      if (index == -1) {
+        result = str;
+      } else {
+        result = str.mid(index);
+      }
+  }
+  return result;
 }
